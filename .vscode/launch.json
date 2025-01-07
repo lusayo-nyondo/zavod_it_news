@@ -1,0 +1,52 @@
+{
+    "configurations": [
+        {
+            "name": "Django App Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "autoStartBrowser": false,
+            "program": "${workspaceFolder}\\manage.py"
+        },
+        {
+            "name": "React App Debug",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "cwd": "${workspaceFolder}\\news_app"
+        },
+        {
+            "name": "React App Build",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "build"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "cwd": "${workspaceFolder}\\news_app"
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Frontend + Backend Debug",
+            "configurations": [
+                "Django App Debug",
+                "React App Debug"
+            ]
+        }
+    ]
+}

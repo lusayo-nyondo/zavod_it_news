@@ -35,6 +35,15 @@ class NewsItem(models.Model):
         auto_now=True
     )
 
+    def set_user_reaction(self, reaction: str, user: User):
+        user_reaction_event, is_new_object = \
+            NewsItemUserReactionEvent.objects.get_or_create(
+                news_item=self,
+                user=user
+            )
+        user_reaction_event.event_type = reaction
+        user_reaction_event.save()
+
     def __str__(self):
         return self.title
 

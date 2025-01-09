@@ -14,6 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
     email: serializers.EmailField = serializers.EmailField(
         required=False
     )
+    id: serializers.IntegerField = serializers.IntegerField(
+        read_only=True
+    )
 
     class Meta:
         model = User

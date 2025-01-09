@@ -64,6 +64,7 @@ class LoginView(generics.GenericAPIView):
 
         if user is not None:
             refresh = RefreshToken.for_user(user)
+            user_serializer = UserSerializer(user)
 
             return Response(
                 {
@@ -72,10 +73,7 @@ class LoginView(generics.GenericAPIView):
                     "data": {
                         "refresh": str(refresh),
                         "access": str(refresh.access_token),
-                        "user": {
-                            "username": user.username,  # type: ignore
-                            "email": user.email,  # type: ignore
-                        }
+                        "user": user_serializer.data,
                     }
                 }
             )

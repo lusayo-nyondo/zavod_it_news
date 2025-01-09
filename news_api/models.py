@@ -3,7 +3,6 @@ import os
 from django.conf import settings
 from django.db import models
 
-
 from django.contrib.auth.models import (
     User
 )
@@ -18,6 +17,24 @@ def _get_news_item_image_upload_path(instance, filename):
         str(instance.id),
         filename
     )
+
+
+class NewsItemQuerySet(models.QuerySet):
+    pass
+
+
+class NewsItemManager(models.Manager):
+    model = type['NewsItem']
+
+    def get_queryset(self, *args, **kwargs):
+        return NewsItemQuerySet(
+            model=self.model,  # type: ignore
+            using=self.db
+        ).annotate(
+            models.Count(
+                models.F('reactions')
+            ),
+        )
 
 
 class NewsItem(models.Model):
@@ -40,12 +57,29 @@ class NewsItem(models.Model):
         auto_now=True
     )
 
-    def set_user_reaction(self, reaction: str, user: User):
-        user_reaction_event, is_new_object = \
-            NewsItemUserReactionEvent.objects.get_or_create(
+    def get_user_reactions(self, type: str | None = None):
+        if type:
+            reactions = NewsItemUserReactionEvent.objects.filter(
                 news_item=self,
-                user=user
+                event_type=type
             )
+        else:
+            reactions = NewsItemUserReactionEvent.objects.filter(
+                news_item=self
+            )
+
+        return reactions
+
+    def get_user_reaction_count(self, type: str | None = None):
+        reactions = self.get_user_reactions(type)
+        return reactions.count()
+
+    def set_user_reaction(self, reaction: str, user: User):
+        user_reaction_event, is_new_object = NewsItemUserReactionEvent.objects.get_or_create(  # noqa: E501
+            news_item=self,
+            user=user
+        )
+
         user_reaction_event.event_type = reaction
         user_reaction_event.save()
 

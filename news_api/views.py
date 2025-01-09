@@ -59,13 +59,45 @@ class NewsItemViewSet(ModelViewSet):
     pagination_class = NewsItemPaginator
     filterset_class = NewsItemFilter
 
+    @action(detail=True, methods=['get'])
+    def get_likes_count(self, request, pk=None):
+        item: NewsItem = self.get_object()
+        likes = item.get_user_reaction_count(
+            type='like'
+        )
+
+        return Response(
+            {
+                'status': 'success',
+                'data': {
+                    'count': likes
+                },
+            }
+        )
+
+    @action(detail=True, methods=['get'])
+    def get_dislikes_count(self, request, pk=None):
+        item: NewsItem = self.get_object()
+        dislikes = item.get_user_reaction_count(
+            type='dislike'
+        )
+
+        return Response(
+            {
+                'status': 'success',
+                'data': {
+                    'count': dislikes
+                },
+            }
+        )
+
     @action(detail=True, methods=['post'])
     def set_user_reaction(self, request, pk=None):
         item: NewsItem = self.get_object()
 
         data = request.data
         user = User.objects.get(
-            user=data['user']
+            id=data['user']
         )
         reaction = request.data['reaction']
 
@@ -76,7 +108,7 @@ class NewsItemViewSet(ModelViewSet):
 
         return Response(
             {
-                'status': 'item marked as completed',
-                'item': NewsItemSerializer(item).data
+                'status': 'success',
+                'data': NewsItemSerializer(item).data
             }
         )

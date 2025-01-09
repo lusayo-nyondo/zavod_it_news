@@ -1,14 +1,62 @@
 import {
+  useState,
+  useEffect,
+  useCallback
+} from 'react';
+
+import {
     NewsItem
 } from '@/types';
 
-const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
-  const handleLike = () => {
+import {
+  getUser
+} from '@/app/auth/actions';
 
+import {
+  setUserReaction,
+  getReactionCount
+} from '@/app/actions';
+
+const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
+  const user = getUser();
+ 
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [dislikeCount, setDislikeCount] = useState<number>(0);
+
+  const getReactionCounts = useCallback(() => {
+    getReactionCount(
+      newsItem.id,
+      'like',
+    ).then(count => setLikeCount(count));
+
+    getReactionCount(
+      newsItem.id,
+      'dislike',
+    ).then(count => setDislikeCount(count));
+  }, [newsItem]);
+
+  useEffect(() => {
+    getReactionCounts();
+  }, [getReactionCounts]);
+
+  const handleLike = () => {
+    setUserReaction(
+      newsItem.id,
+      user.id,
+      'like'
+    );
+
+    getReactionCounts();
   };
 
   const handleDislike = () => {
+    setUserReaction(
+      newsItem.id,
+      user.id,
+      'dislike'
+    );
 
+    getReactionCounts();
   };
 
   return (
@@ -28,6 +76,18 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
               {tag.label}
             </a>
           ))}
+        </div>
+        <div className="mt-2">
+          <div className="flex flex-row flex-nowrap">
+            <button className="text-gray-700 rounded-l-full flex flex-row gap-1 flex-nowrap justify-start items-center border-r border-white bg-gray-200 hover:bg-gray-100 p-1" type="button" onClick={ handleLike }>
+              <span>{ likeCount }</span>
+              <span>{ likeCount == 1 ? 'Like' : 'Likes'}</span>
+            </button>
+            <button className="text-gray-700 rounded-r-full flex flex-row gap-1 flex-nowrap justify-start items-center border-l border-white bg-gray-200 hover:bg-gray-100 p-2" type="button" onClick={ handleDislike }>
+              <span>{ dislikeCount }</span>
+              <span>{ dislikeCount == 1 ? 'Dislike' : 'Dislikes' }</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

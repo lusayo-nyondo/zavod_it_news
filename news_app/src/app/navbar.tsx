@@ -1,8 +1,4 @@
 import {
-  Link
-} from 'react-router-dom';
-
-import {
   getUser,
   logoutUser
 } from '@/app/auth/actions';
@@ -15,19 +11,17 @@ const Navbar = () => {
   ];
 
   const user = getUser();
-  console.log('User is:');
-  console.log(user);
 
   return (
     <nav className="bg-white w-full border-b">
       <div className="flex items-center justify-between px-4 max-w-screen-xl mx-auto py-3 md:flex md:px-8">
-        <Link to="/">
+        <a href="/">
           <img src="/logo.png" alt="Logo Image" className="h-12 object-contain object-center" />    
-        </Link>
+        </a>
         <ul className="flex items-center flex-row space-x-6 space-y-0">
           {menus.map((item, idx) => (
             <li key={idx} className="text-gray-600 hover:text-slate-400 font-bold">
-              <Link to={item.path}>{item.title}</Link>
+              <a href={item.path}>{item.title}</a>
             </li>
           ))}
         </ul>

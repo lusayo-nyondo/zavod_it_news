@@ -48,7 +48,6 @@ export const getNewsItemsPage = async (pageNumber: number = 1, tag: string | nul
       nextPage = parseInt(urlParams.get('page') ?? '1');
   } catch (error) {
       console.error("Failed to fetch news items:", error);
-      console.log(error);
   }
 
   return [newsItems, nextPage];
@@ -68,8 +67,6 @@ export const getNewsItem = async (id: number): Promise<NewsItem | undefined> => 
 
     const jsonData = await response.json();
 
-    console.log(jsonData);
-
     newsItem = {
       id: jsonData.id,
       title: jsonData.title,
@@ -83,7 +80,7 @@ export const getNewsItem = async (id: number): Promise<NewsItem | undefined> => 
     
     return newsItem;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return undefined;
@@ -109,7 +106,6 @@ export const getTagList = async () => {
       }));
   } catch (error) {
       console.error("Failed to fetch tags:", error);
-      console.log(error);
   }
 
   return tags;
@@ -129,8 +125,6 @@ export const getTag = async(id: number): Promise<NewsItemTag | undefined> => {
 
     const jsonData = await response.json();
 
-    console.log(jsonData);
-
     tag = {
       id: jsonData.id,
       label: jsonData.label,
@@ -139,7 +133,7 @@ export const getTag = async(id: number): Promise<NewsItemTag | undefined> => {
     
     return tag;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return undefined;
@@ -151,6 +145,7 @@ export const setUserReaction = async (newsItemId: number, userId: number, reacti
     user: userId,
     reaction: reaction
   };
+  console.log("Data is: ", data);
   const token = getAuthToken();
 
   try {
@@ -171,7 +166,33 @@ export const setUserReaction = async (newsItemId: number, userId: number, reacti
     console.log('Reaction set successfully:', result);
   } catch (error) {
     console.error('Error setting user reaction:', error);
-    console.log(error);
   }
 };
 
+export const getReactionCount = async (newsItemId: number, type: string | undefined) => {
+  let url = '';
+
+  if (type && type === 'like') {
+    url = `${API_URL}newsitems/${newsItemId}/get_likes_count/`;
+  } else if (type && type === 'dislike') {
+    url = `${API_URL}newsitems/${newsItemId}/get_dislikes_count/`;
+  };
+
+  try {
+    const response = await fetch(
+      url,
+      {
+        method: 'GET'
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to get count for user reactions.');
+    }
+
+    const jsonData = await response.json();
+    return jsonData.data.count;
+  } catch (error) {
+    console.error(error);
+  }
+};

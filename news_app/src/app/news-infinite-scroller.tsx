@@ -29,7 +29,7 @@ const useIsBottomVisible = ({ ref }: { ref: RefObject<HTMLDivElement> }) => {
       }
     }
 
-    const observer = new MutationObserver(() => { console.log("From observer: "); checkVisibility(); });
+    const observer = new MutationObserver(checkVisibility);
     
     if (ref.current) {
       observer.observe(ref.current, {
@@ -73,7 +73,6 @@ const NewsInfiniteScroller = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Using effect");
     if (!fetchingRef.current) {
       fetchingRef.current = true; // Set fetching flag
 
@@ -84,7 +83,6 @@ const NewsInfiniteScroller = () => {
           ...n,
           ...data[0]
         ]);
-        console.log("Nextpage:", data[1]);
         currentPage.current = nextPage.current;
         nextPage.current = data[1];
       }).finally(() => {

@@ -3,6 +3,7 @@ export type NewsItem = {
     title: string;
     main_image: string;
     text: string;
+    images: NewsItemImage[];
     created_on: string;
     updated_on: string;
     tags: NewsItemTag[];
@@ -18,10 +19,8 @@ export type NewsItemImage = {
 
 export type NewsItemTag = {
     id: number;
-    news_item: NewsItem[];
     label: string;
-    created_on: string;
-    updated_on: string;
+    image: string;
 };
 
 export type NewsItemUserReactionEvent = {

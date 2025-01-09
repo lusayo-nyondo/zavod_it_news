@@ -11,6 +11,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('django_admin', admin.site.urls),
     path('api/', include('news_api.urls')),
+    path('auth/', include('api_auth.urls')),
 ] + static(
     getattr(settings, 'MEDIA_URL'),
     document_root=getattr(settings, 'MEDIA_ROOT'),

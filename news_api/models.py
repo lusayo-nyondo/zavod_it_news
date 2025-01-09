@@ -80,6 +80,9 @@ class NewsItemTag(models.Model):
         NewsItem,
         related_name='tags',
     )
+    image: models.ImageField = models.ImageField(
+        upload_to='tags',
+    )
     label: models.CharField = models.CharField(
         max_length=120
     )

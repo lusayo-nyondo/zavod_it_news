@@ -13,7 +13,8 @@ class NewsItemTagSerializer(serializers.ModelSerializer):
         model = NewsItemTag
         fields = [
             'id',
-            'label'
+            'label',
+            'image',
         ]
 
 

@@ -1,10 +1,10 @@
 import {
-    API_URL
+    AUTH_URL
 } from '@/lib/config';
 
 
 export const loginUser = async (username: string, password: string) => {
-    const url = `${API_URL}login/`;
+    const url = `${AUTH_URL}login/`;
 
     const response = await fetch(url, {
         method: 'POST',
@@ -24,6 +24,8 @@ export const loginUser = async (username: string, password: string) => {
             localStorage.setItem('access', responseData.data.access);
             localStorage.setItem('refresh', responseData.data.refresh);
             localStorage.setItem('user', JSON.stringify(responseData.data.user));
+
+            window.location.assign('/');
         } else {
             // Managed error
             const error = responseData.message;
@@ -37,7 +39,7 @@ export const loginUser = async (username: string, password: string) => {
 };
 
 export const registerUser = async (username: string, email: string, password: string) => {
-    const url = `${API_URL}register/`;
+    const url = `${AUTH_URL}register/`;
 
     const response = await fetch(url, {
         method: 'POST',
@@ -60,15 +62,20 @@ export const registerUser = async (username: string, email: string, password: st
 }
 
 export const getUser = () => {
-    // Call this method once to verify the user token exists.
-    getAuthToken();
+    let userData;
 
-    const userInStorage = localStorage.getItem('user');
-    const userData = JSON.parse(
-        userInStorage ?? ''
-    );
+    try {
+        getAuthToken();
 
-    return userData;
+        const userInStorage = localStorage.getItem('user');
+        userData = JSON.parse(
+            userInStorage ?? ''
+        );
+    } catch(error) {
+        console.log(error);
+    }
+
+    return userData ?? undefined;
 }
 
 export const getAuthToken = () => {
@@ -86,5 +93,5 @@ export const logoutUser = () => {
     localStorage.removeItem('refresh');
     localStorage.removeItem('user');
 
-    window.location.href = '/login';
+    window.location.href = '/login/';
 }

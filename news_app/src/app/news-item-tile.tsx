@@ -3,20 +3,30 @@ import {
 } from '@/types';
 
 const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
+  const handleLike = () => {
+
+  };
+
+  const handleDislike = () => {
+
+  };
+
   return (
-    <div className="border rounded-lg overflow-hidden shadow-md w-full bg-white">
-      <img
-          src={newsItem.main_image} 
-          alt="News item main image." 
-          className="object-fit object-contain h-48 relative w-full p-2"
-        />
+    <div className="group overflow-hidden border rounded-lg shadow-md w-full h-[50vh] flex row gap-2 justify-between items-center bg-white">
+      <a className="flex justify-center items-center w-56 h-full" href={`/news_item/${newsItem.id}`}>
+        <img
+            src={newsItem.main_image} 
+            alt="News item main image." 
+            className="object-fit object-contain relative h-56 p-2 group-hover:scale-105 transition duration-500"
+          />
+      </a>
       <div className="p-4">
-        <h3 className="text-lg font-semibold">{newsItem.title}</h3>
+        <a className="text-lg font-semibold text-gray-700" href={`/news_item/${newsItem.id}`}>{newsItem.title}</a>
         <div className="mt-2">
           {newsItem.tags.map((tag, index) => (
-            <span key={index} className="inline-block bg-gray-200 text-gray-700 rounded-full px-2 py-1 text-sm mr-2 mb-2">
+            <a href={ `/?tag_id=${tag.id}` } key={index} className="inline-block bg-gray-200 text-gray-700 rounded-full px-2 py-1 text-sm mr-2 mb-2">
               {tag.label}
-            </span>
+            </a>
           ))}
         </div>
       </div>

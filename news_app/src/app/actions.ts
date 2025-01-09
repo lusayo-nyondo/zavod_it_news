@@ -4,6 +4,7 @@ import {
 
 import {
   NewsItem,
+  NewsItemTag
 } from '@/types';
 
 import {
@@ -11,12 +12,18 @@ import {
 } from '@/lib/config';
 
 
-export const getNewsItemsPage = async (pageNumber: number = 1): Promise<[NewsItem[], number]> => {
+export const getNewsItemsPage = async (pageNumber: number = 1, tag: string | null): Promise<[NewsItem[], number]> => {
   let newsItems: NewsItem[] = [];
   let nextPage = 1;
 
-  const url = `${API_URL}newsitems/?page=${pageNumber}`;
-
+  let url = '';
+  
+  if (tag) {
+    url = `${API_URL}newsitems/?page=${pageNumber}&tag=${tag}`;
+  } else {
+    url = `${API_URL}newsitems/?page=${pageNumber}`;
+  }
+  
   try {
       const response = await fetch(url, { method: 'GET' });
       
@@ -47,6 +54,96 @@ export const getNewsItemsPage = async (pageNumber: number = 1): Promise<[NewsIte
   return [newsItems, nextPage];
 };
 
+export const getNewsItem = async (id: number): Promise<NewsItem | undefined> => {
+  let newsItem: NewsItem;
+  const url = `${API_URL}newsitems/${id}/`;
+  
+  try {
+    const response = await fetch(
+      url,
+      {
+        'method': 'GET'
+      }
+    );
+
+    const jsonData = await response.json();
+
+    console.log(jsonData);
+
+    newsItem = {
+      id: jsonData.id,
+      title: jsonData.title,
+      main_image: jsonData.main_image,
+      text: jsonData.text,
+      images: jsonData.images,
+      tags: jsonData.tags,
+      created_on: jsonData.created_on,
+      updated_on: jsonData.updated_on
+    };
+    
+    return newsItem;
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
+}
+
+export const getTagList = async () => {
+  const url = `${API_URL}tags/`;
+  let tags: NewsItemTag[] = [];
+
+  try {
+      const response = await fetch(url, { method: 'GET' });
+      
+      if (!response.ok) {
+          throw new Error(`Error fetching news items: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      tags = data.map((item: NewsItemTag) => ({
+          id: item.id,
+          label: item.label,
+          image: item.image,
+      }));
+  } catch (error) {
+      console.error("Failed to fetch tags:", error);
+      console.log(error);
+  }
+
+  return tags;
+}
+
+export const getTag = async(id: number): Promise<NewsItemTag | undefined> => {
+  let tag: NewsItemTag;
+  const url = `${API_URL}tags/${id}/`;
+
+  try {
+    const response = await fetch(
+      url,
+      {
+        'method': 'GET'
+      }
+    );
+
+    const jsonData = await response.json();
+
+    console.log(jsonData);
+
+    tag = {
+      id: jsonData.id,
+      label: jsonData.label,
+      image: jsonData.image
+    };
+    
+    return tag;
+  } catch (error) {
+    console.log(error);
+  }
+
+  return undefined;
+};
 
 export const setUserReaction = async (newsItemId: number, userId: number, reaction: string) => {
   const url = `${API_URL}newsitems/${newsItemId}/set_user_reaction/`;
@@ -77,3 +174,4 @@ export const setUserReaction = async (newsItemId: number, userId: number, reacti
     console.log(error);
   }
 };
+

@@ -6,7 +6,8 @@ from django.urls import (
 from rest_framework import routers  # type: ignore
 
 from .views import (
-    NewsItemViewSet
+    NewsItemViewSet,
+    NewsItemTagViewSet
 )
 
 
@@ -14,6 +15,10 @@ news_api_router = routers.DefaultRouter()
 news_api_router.register(
     r'newsitems',
     NewsItemViewSet
+)
+news_api_router.register(
+    r'tags',
+    NewsItemTagViewSet
 )
 
 urlpatterns = [

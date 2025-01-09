@@ -47,6 +47,8 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(generics.GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [
         AllowAny,
     ]
@@ -83,5 +85,5 @@ class LoginView(generics.GenericAPIView):
                 "status": "error",
                 "message": "Invalid Credentials",
             },
-            status=400
+            status=401
         )

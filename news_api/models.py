@@ -70,6 +70,16 @@ class NewsItem(models.Model):
 
         return reactions
 
+    def get_user_reaction(self, user: User):
+        try:
+            reaction_event = NewsItemUserReactionEvent.objects.get(
+                news_item=self,
+                user=user
+            )
+            return reaction_event.event_type
+        except NewsItemUserReactionEvent.DoesNotExist:
+            return None
+
     def get_user_reaction_count(self, type: str | None = None):
         reactions = self.get_user_reactions(type)
         return reactions.count()

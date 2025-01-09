@@ -53,11 +53,39 @@ class NewsItemPaginator(PageNumberPagination):
     page_size = 3
 
 
+class NewsItemAdminPaginator(PageNumberPagination):
+    page_size = 18
+
+
+class NewsItemAdminViewSet(ModelViewSet):
+    queryset = NewsItem.objects.all()
+    serializer_class = NewsItemSerializer
+    pagination_class = NewsItemAdminPaginator
+
+
 class NewsItemViewSet(ModelViewSet):
     queryset = NewsItem.objects.all()
     serializer_class = NewsItemSerializer
     pagination_class = NewsItemPaginator
     filterset_class = NewsItemFilter
+
+    @action(detail=True, methods=['get'])
+    def get_user_reaction(self, request, pk=None):
+        item: NewsItem = self.get_object()
+
+        data = request.query_params
+        user = User.objects.get(
+            id=data['user']
+        )
+
+        reaction = item.get_user_reaction(user)
+
+        return Response(
+            {
+                'status': 'success',
+                'data': reaction
+            }
+        )
 
     @action(detail=True, methods=['get'])
     def get_likes_count(self, request, pk=None):

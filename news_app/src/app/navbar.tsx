@@ -11,7 +11,7 @@ const Navbar = () => {
   ];
 
   const user = getUser();
-
+  
   return (
     <nav className="bg-white w-full border-b">
       <div className="flex items-center justify-between px-4 max-w-screen-xl mx-auto py-3 md:flex md:px-8">
@@ -27,7 +27,12 @@ const Navbar = () => {
         </ul>
         <div>
           { user ? (
-            <button className="text-gray-600 hover:text-slate-400 font-bold" onClick={ logoutUser }>Logout</button>
+            <div className="flex flex-row gap-2">
+              { user.is_staff && (
+                <a href="/admin" className="text-gray-600 hover:text-slate-400 font-bold">Admin</a>
+              )}
+              <button className="text-gray-600 hover:text-slate-400 font-bold" onClick={ logoutUser }>Logout</button>
+            </div>
           ) : (
             <a className="text-gray-600 hover:text-slate-400 font-bold" href="/login">Login</a>
           )}

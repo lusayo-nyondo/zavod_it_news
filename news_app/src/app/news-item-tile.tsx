@@ -14,14 +14,24 @@ import {
 
 import {
   setUserReaction,
-  getReactionCount
+  getReactionCount,
+  getUserReaction as getUserReactionFromAPI
 } from '@/app/actions';
 
 const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
   const user = getUser();
  
+  const [userReaction, setUserReactionState] = useState<string>('');
   const [likeCount, setLikeCount] = useState<number>(0);
   const [dislikeCount, setDislikeCount] = useState<number>(0);
+
+  const getUserReaction = useCallback(() => {
+    if(user) (
+      getUserReactionFromAPI(newsItem.id, user.id).then(reaction => {
+        setUserReactionState(reaction);
+      })
+    );
+  }, [newsItem, user]);
 
   const getReactionCounts = useCallback(() => {
     getReactionCount(
@@ -36,8 +46,9 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
   }, [newsItem]);
 
   useEffect(() => {
+    getUserReaction();
     getReactionCounts();
-  }, [getReactionCounts]);
+  }, [getReactionCounts, getUserReaction]);
 
   const handleLike = () => {
     setUserReaction(
@@ -45,6 +56,7 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
       user.id,
       'like'
     ).then(() => {
+      getUserReaction();
       getReactionCounts();
     });
   };
@@ -55,6 +67,7 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
       user.id,
       'dislike'
     ).then(() => {
+      getUserReaction();
       getReactionCounts();
     });
   };
@@ -79,11 +92,17 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
         </div>
         <div className="mt-2">
           <div className="flex flex-row flex-nowrap">
-            <button className="text-gray-700 rounded-l-full flex flex-row gap-1 flex-nowrap justify-start items-center border-r border-white bg-gray-200 hover:bg-gray-100 p-1" type="button" onClick={ handleLike }>
+            <button
+              className={ `${userReaction == 'like' ? 'text-gray-100 bg-gray-700 hover:bg-gray-500' : 'text-gray-700 bg-gray-200 hover:bg-gray-100'} rounded-l-full flex flex-row gap-1 flex-nowrap justify-start items-center border-r border-white px-2`}
+              type="button"
+              onClick={ handleLike }>
               <span>{ likeCount }</span>
               <span>{ likeCount == 1 ? 'Like' : 'Likes'}</span>
             </button>
-            <button className="text-gray-700 rounded-r-full flex flex-row gap-1 flex-nowrap justify-start items-center border-l border-white bg-gray-200 hover:bg-gray-100 p-2" type="button" onClick={ handleDislike }>
+            <button
+              className={ `${userReaction == 'dislike' ? 'text-gray-100 bg-gray-700 hover:bg-gray-500' : 'text-gray-700 bg-gray-200 hover:bg-gray-100'} rounded-r-full flex flex-row gap-1 flex-nowrap justify-start items-center border-l border-white px-2` }
+              type="button"
+              onClick={ handleDislike }>
               <span>{ dislikeCount }</span>
               <span>{ dislikeCount == 1 ? 'Dislike' : 'Dislikes' }</span>
             </button>

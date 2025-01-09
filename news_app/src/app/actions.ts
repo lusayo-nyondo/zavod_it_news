@@ -196,3 +196,25 @@ export const getReactionCount = async (newsItemId: number, type: string | undefi
     console.error(error);
   }
 };
+
+export const getUserReaction = async (newsItemId: number, userId: number) => {
+  const url = `${API_URL}newsitems/${newsItemId}/get_user_reaction/?user=${userId}`;
+
+  try {
+    const response = await fetch(
+      url,
+      {
+        method: 'GET',
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to user reaction.');
+    }
+
+    const jsonData = await response.json();
+    return jsonData.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

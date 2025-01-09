@@ -12,12 +12,18 @@ import Index from '@/app/index';
 import BrowseTags from '@/app/browse_tags/page';
 import NewsItem from '@/app/news_item/page';
 
+import AdminLayout from '@/admin/layout';
+import AdminIndex from '@/admin/index';
+
 import AuthLayout from '@/app/auth/layout';
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/admin" element={ <AdminLayout /> }>
+          <Route index element={ <AdminIndex /> } />
+        </Route>
         <Route path="/" element={ <AppLayout /> }>
           <Route index element={ <Index /> } />
           <Route path="/browse_tags" element={ <BrowseTags /> } />

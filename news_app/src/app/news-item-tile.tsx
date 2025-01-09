@@ -44,9 +44,9 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
       newsItem.id,
       user.id,
       'like'
-    );
-
-    getReactionCounts();
+    ).then(() => {
+      getReactionCounts();
+    });
   };
 
   const handleDislike = () => {
@@ -54,9 +54,9 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
       newsItem.id,
       user.id,
       'dislike'
-    );
-
-    getReactionCounts();
+    ).then(() => {
+      getReactionCounts();
+    });
   };
 
   return (

@@ -17,6 +17,12 @@ class UserSerializer(serializers.ModelSerializer):
     id: serializers.IntegerField = serializers.IntegerField(
         read_only=True
     )
+    is_staff: serializers.BooleanField = serializers.BooleanField(
+        read_only=True
+    )
+    is_superuser: serializers.BooleanField = serializers.BooleanField(
+        read_only=True
+    )
 
     class Meta:
         model = User
@@ -24,6 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
+            'is_staff',
+            'is_superuser',
             'password',
         ]
 

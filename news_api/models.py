@@ -80,8 +80,11 @@ class NewsItem(models.Model):
             user=user
         )
 
-        user_reaction_event.event_type = reaction
-        user_reaction_event.save()
+        if user_reaction_event.event_type == reaction:
+            user_reaction_event.delete()
+        else:
+            user_reaction_event.event_type = reaction
+            user_reaction_event.save()
 
     def __str__(self):
         return self.title

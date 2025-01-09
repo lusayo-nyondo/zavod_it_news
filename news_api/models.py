@@ -21,6 +21,11 @@ def _get_news_item_image_upload_path(instance, filename):
 
 
 class NewsItem(models.Model):
+    class Meta:
+        ordering = [
+            '-created_on'
+        ]
+
     title: models.CharField = models.CharField(
         max_length=255
     )
@@ -73,6 +78,7 @@ class NewsItemImage(models.Model):
 class NewsItemTag(models.Model):
     news_item: models.ManyToManyField = models.ManyToManyField(
         NewsItem,
+        related_name='tags',
     )
     label: models.CharField = models.CharField(
         max_length=120

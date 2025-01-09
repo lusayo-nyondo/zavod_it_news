@@ -1,5 +1,12 @@
+import {
+    API_URL
+} from '@/lib/config';
+
+
 export const loginUser = async (username: string, password: string) => {
-    const response = await fetch('/api/login', {
+    const url = `${API_URL}login/`;
+
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -24,13 +31,15 @@ export const loginUser = async (username: string, password: string) => {
         }
     } else {
         // Unmanaged error
-        const errorData = await response.json();
-        window.location.href = `/login?error=${errorData.error}`
+        const errorData = response.statusText;
+        window.location.href = `/login?error=${errorData}: ${url}`;
     }
 };
 
 export const registerUser = async (username: string, email: string, password: string) => {
-    const response = await fetch('/api/login/', {
+    const url = `${API_URL}register/`;
+
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -45,8 +54,8 @@ export const registerUser = async (username: string, email: string, password: st
     if (response.ok) {
         window.location.href = '/login';
     } else {
-        const errorData = await response.json();
-        window.location.href = `/register?error=${errorData.error}`;
+        const errorData = response.statusText;
+        window.location.href = `/login?error=${errorData}: ${url}`;
     }
 }
 

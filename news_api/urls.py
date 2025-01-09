@@ -12,7 +12,7 @@ from .views import (
 
 news_api_router = routers.DefaultRouter()
 news_api_router.register(
-    r'news_items',
+    r'newsitems',
     NewsItemViewSet
 )
 

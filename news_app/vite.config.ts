@@ -3,10 +3,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(() => ({
   plugins: [react()],
-  base: '/static/',
   build: {
+    assetsDir: 'static',
     rollupOptions: {
       input: {
         app: './index.html',
@@ -20,4 +20,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-});
+}));

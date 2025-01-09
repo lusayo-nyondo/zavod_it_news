@@ -11,7 +11,6 @@
 ## Logging In
 - I've shipped the database, `db.sqlite3`, together with the repository to make it easier to check the app's functionality.
 - The database contains the following users and their passwords:
-    - admin: Admin1234
     - zavod_it: Zavod2025
     - lusayo: Lusayo1234
 

@@ -156,7 +156,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/admin">
                 <img src="logo.png" alt="Logo Image" className="h-40 object-contain object-center" />
               </a>
             </SidebarMenuButton>

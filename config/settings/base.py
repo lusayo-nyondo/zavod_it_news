@@ -27,13 +27,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'rest_Framework_simplejwt',
+    'rest_framework_simplejwt',
+    
+    'corsheaders',
 
+    'api_auth',
     'news_api',
     'news_app',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -103,7 +107,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'news_app' / 'templates' / 'news_app'
+    BASE_DIR / 'news_app' / 'templates' / 'news_app' / 'static',
 ]
 
 MEDIA_URL = '/media/'
@@ -126,3 +130,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

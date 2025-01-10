@@ -41,7 +41,7 @@ const NewsItemPage = () => {
                 <span className="font-thin">{newsItem.created_on}</span>
             </div>
             <div>
-              {newsItem.tags.map((tag, index) => (
+              {newsItem?.tags?.map((tag, index) => (
                 <a href={ `/?tag_id=${tag.id}` } key={index} className="inline-block bg-gray-200 text-gray-700 rounded-full px-2 py-1 text-sm mr-2 mb-2">
                   { tag.label }
                 </a>

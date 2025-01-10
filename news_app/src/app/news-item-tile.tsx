@@ -27,7 +27,7 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
 
   const getUserReaction = useCallback(() => {
     if(user) (
-      getUserReactionFromAPI(newsItem.id, user.id).then(reaction => {
+      getUserReactionFromAPI(newsItem?.id ?? -1, user.id).then(reaction => {
         setUserReactionState(reaction);
       })
     );
@@ -35,12 +35,12 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
 
   const getReactionCounts = useCallback(() => {
     getReactionCount(
-      newsItem.id,
+      newsItem?.id ?? -1,
       'like',
     ).then(count => setLikeCount(count));
 
     getReactionCount(
-      newsItem.id,
+      newsItem?.id ?? -1,
       'dislike',
     ).then(count => setDislikeCount(count));
   }, [newsItem]);
@@ -52,7 +52,7 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
 
   const handleLike = () => {
     setUserReaction(
-      newsItem.id,
+      newsItem?.id ?? -1,
       user.id,
       'like'
     ).then(() => {
@@ -63,7 +63,7 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
 
   const handleDislike = () => {
     setUserReaction(
-      newsItem.id,
+      newsItem?.id ?? -1,
       user.id,
       'dislike'
     ).then(() => {
@@ -84,7 +84,7 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
       <div className="p-4">
         <a className="text-lg font-semibold text-gray-700" href={`/news_item/${newsItem.id}`}>{newsItem.title}</a>
         <div className="mt-2">
-          {newsItem.tags.map((tag, index) => (
+          {newsItem?.tags?.map((tag, index) => (
             <a href={ `/?tag_id=${tag.id}` } key={index} className="inline-block bg-gray-200 text-gray-700 rounded-full px-2 py-1 text-sm mr-2 mb-2">
               {tag.label}
             </a>

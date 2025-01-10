@@ -98,7 +98,7 @@ class Command(BaseCommand):
             for j in range(random.randint(1, 3)):
                 NewsItemImage.objects.create(
                     news_item=news_item,
-                    image='/news_items/default_extra.jpg'
+                    image='/news_items/default_extra.webp'
                 )
 
             selected_tags = random.sample(

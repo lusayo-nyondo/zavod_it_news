@@ -48,6 +48,13 @@ const NewsItemPage = () => {
               ))}
             </div>
           </header>
+          <div className="p-2 flex flex-row gap-2">
+              { newsItem.images?.map(image => (
+                <img
+                  className="h-48 p-2 aspect-video object-fit object-contain bg-white"
+                  src={image.image} alt={ `${newsItem.title} image - ${image.id}`}/>
+              ))}
+          </div>
           <div className="flex-1">
             <Card className="h-full">
               <CardContent className="h-full">

@@ -1,7 +1,11 @@
+import ViewsChart from '@/admin/statistics/views-chart';
+import ViewsTable from '@/admin/statistics/views-table';
+
 const Index = () => {
     return (
         <div>
-            <p>Statistics page</p>
+            <ViewsChart />
+            <ViewsTable />
         </div>
     )
 }

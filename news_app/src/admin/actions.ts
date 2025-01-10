@@ -37,9 +37,13 @@ const calculatePaginationIndices = (
   };
 }
 
-export const getNewsItems = async (pageNumber: number = 1): Promise<[NewsItem[], number, number, number, number]> => {
+export const getNewsItems = async (pageNumber: number = 1, orderBy: string | undefined = undefined): Promise<[NewsItem[], number, number, number, number]> => {
   let newsItems: NewsItem[] = [];
-  const url = `${API_URL}newsitems/?page_size=18&page=${pageNumber}`;
+  let url = `${API_URL}newsitems/?page_size=18&page=${pageNumber}`;
+
+  if (orderBy) {
+    url = `${url}&order_by=${orderBy}`;
+  }
 
   let count: number = 0;
   let nextPage: number = 0;
@@ -63,7 +67,8 @@ export const getNewsItems = async (pageNumber: number = 1): Promise<[NewsItem[],
           text: item.text,
           created_on: item.created_on,
           tags: item.tags,
-          main_image: item.main_image
+          main_image: item.main_image,
+          views: item.views,
       }));
       const nextPageURL = new URL(jsonData.next);
       const urlParams = new URLSearchParams(nextPageURL.search);

@@ -103,6 +103,7 @@ export const getTagList = async () => {
           id: item.id,
           label: item.label,
           image: item.image,
+          views: item.views,
       }));
   } catch (error) {
       console.error("Failed to fetch tags:", error);

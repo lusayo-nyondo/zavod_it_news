@@ -123,6 +123,13 @@ class NewsItemViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
 
+        order_by = self.request.query_params.get('order_by', None)
+
+        if order_by:
+            queryset = queryset.order_by('-views')
+        else:
+            queryset = queryset.order_by('-created_on')
+
         page_size = self.request.query_params.get('page_size', None)
 
         if page_size is not None:

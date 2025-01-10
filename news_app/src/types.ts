@@ -7,6 +7,7 @@ export type NewsItem = {
     created_on?: string;
     updated_on?: string;
     tags?: NewsItemTag[];
+    views?: number;
 };
 
 export type NewsItemImage = {
@@ -21,6 +22,7 @@ export type NewsItemTag = {
     id: number;
     label: string;
     image: string;
+    views?: number;
 };
 
 export type NewsItemUserReactionEvent = {

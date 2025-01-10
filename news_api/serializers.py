@@ -12,6 +12,10 @@ class NewsItemTagSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(
         required=False
     )
+    views = serializers.SerializerMethodField()
+
+    def get_views(self, obj):
+        return obj.views
 
     class Meta:
         model = NewsItemTag
@@ -19,8 +23,12 @@ class NewsItemTagSerializer(serializers.ModelSerializer):
             'id',
             'label',
             'image',
+            'views',
         ]
-        read_only_fields = ['id']
+        read_only_fields = [
+            'id',
+            'views',
+        ]
 
 
 class NewsItemImageSerializer(serializers.ModelSerializer):

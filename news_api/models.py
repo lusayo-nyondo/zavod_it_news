@@ -38,6 +38,8 @@ class NewsItemManager(models.Manager):
 
 
 class NewsItem(models.Model):
+    objects = NewsItemManager()
+
     class Meta:
         ordering = [
             '-created_on'
@@ -140,7 +142,25 @@ class NewsItemImage(models.Model):
         )
 
 
+class NewsItemTagQuerySet(models.QuerySet):
+    pass
+
+
+class NewsItemTagManager(models.Manager):
+    model = type['NewsItemTag']
+
+    def get_queryset(self, *args, **kwargs):
+        return NewsItemTagQuerySet(
+            model=self.model,  # type: ignore
+            using=self.db
+        ).annotate(
+            views=models.Sum('news_item__views')
+        )
+
+
 class NewsItemTag(models.Model):
+    objects = NewsItemTagManager()
+
     news_item: models.ManyToManyField = models.ManyToManyField(
         NewsItem,
         related_name='tags',

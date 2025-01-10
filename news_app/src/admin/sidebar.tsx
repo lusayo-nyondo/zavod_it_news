@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
   Newspaper,
+  ChartNoAxesColumn,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main";
@@ -22,12 +23,18 @@ import {
 const data = {
   navMain: [
     {
-      title: "News Items",
+      title: "Statistics",
       url: "/admin",
+      icon: ChartNoAxesColumn,
+      isActive: false,
+      items: []
+    },
+    {
+      title: "News Items",
+      url: "/admin/news_items",
       icon: Newspaper,
       isActive: true,
-      items: [
-      ],
+      items: [],
     },
   ],
 }

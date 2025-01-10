@@ -15,9 +15,10 @@ import NewsItem from '@/app/news_item/page';
 import AdminLayout from '@/admin/layout';
 import AdminIndex from '@/admin/index';
 
-import ViewNewsItem from '@/admin/news_item/view';
-import CreateNewsItem from '@/admin/news_item/create';
-import UpdateNewsItem from '@/admin/news_item/update';
+import NewsItemsIndex from '@/admin/news_items/index';
+import ViewNewsItem from '@/admin/news_items/view';
+import CreateNewsItem from '@/admin/news_items/create';
+import UpdateNewsItem from '@/admin/news_items/update';
 
 import AuthLayout from '@/app/auth/layout';
 
@@ -25,11 +26,14 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/admin/" element={ <AdminLayout /> }>
+        <Route path="/admin" element={ <AdminLayout />}>
           <Route index element={ <AdminIndex /> } />
-          <Route path="news_items/:id" element={ <ViewNewsItem /> } />
-          <Route path="news_items/create" element={ <CreateNewsItem /> } />
-          <Route path="news_items/:id/update" element={ <UpdateNewsItem /> } />
+          <Route path="news_items">
+            <Route index element={ <NewsItemsIndex /> } />
+            <Route path=":id" element={ <ViewNewsItem /> } />
+            <Route path="create" element={ <CreateNewsItem /> } />
+            <Route path=":id/update" element={ <UpdateNewsItem /> } />
+          </Route>
         </Route>
         <Route path="/" element={ <AppLayout /> }>
           <Route index element={ <Index /> } />

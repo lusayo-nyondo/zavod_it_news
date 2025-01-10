@@ -19,7 +19,7 @@ import {
 
 import {
     deleteNewsItem as deleteItemImpl
-} from '@/admin/news_item/_actions';
+} from '@/admin/news_items/_actions';
 
 function DeleteDialog({ newsItem }: { newsItem: NewsItem}) {
     const deleteNewsItem = () => {

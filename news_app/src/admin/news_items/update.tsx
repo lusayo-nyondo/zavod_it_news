@@ -4,58 +4,86 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus } from 'lucide-react';
+import { Save } from 'lucide-react';
 
-import {
-    schema
-} from '@/admin/news_item/_schema';
-
-import {
-    NewsItemFormData
-} from "@/admin/news_item/_types";
-
-import {
-    createNewsItem
-} from '@/admin/news_item/_actions';
-
+import { getNewsItem } from '@/app/actions';
+import { schema } from '@/admin/news_items/_schema';
+import { NewsItemFormData } from "@/admin/news_items/_types";
+import { updateNewsItem } from '@/admin/news_items/_actions';
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Newspaper, LucideProps } from "lucide-react";
+import { getTagList } from '@/app/actions';
+import { NewsItemTag, NewsItem } from '@/types';
+import { useParams, useNavigate } from 'react-router-dom';
 
-import {
-    getTagList
-} from '@/app/actions';
+const UpdateNewsItemForm: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    const [newsItem, setNewsItem] = useState<NewsItem>();
+    
+    const [tags, setTags] = useState<NewsItemTag[]>([]);
+    const [tagSelectOptions, setTagSelectOptions] = useState<{
+        value: string;
+        label: string;
+        icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+    }[]>([]);
 
-import {
-    NewsItemTag
-} from '@/types';
-
-const CreateNewsItemForm: React.FC = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm<NewsItemFormData>({
+    const navigate = useNavigate();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<NewsItemFormData>({
         resolver: zodResolver(schema),
     });
 
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [ tags, setTags ] = useState<NewsItemTag[]>();
-
-    const [ tagSelectOptions, setTagSelectOptions ] = useState<{
-        value: string;
-        label: string;
-        icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
-    }[]>();
+    
     const [selectedTags, setSelectedTags] = useState<string[]>();
+
+    useEffect(() => {
+        getNewsItem(parseInt(id ?? '-1')).then(data => {
+            setNewsItem(data);
+        })
+    }, [id]);
+
+    useEffect(() => {
+        const currentSelectedTags = newsItem?.tags?.map(tag => tag.id.toString());
+        setSelectedTags(currentSelectedTags);
+    }, [newsItem]);
+
+    useEffect(() => {
+        setValue('title', newsItem?.title ?? '');
+        setValue('text', newsItem?.text ?? '');
+        
+        if (newsItem?.main_image) {
+            setImagePreview(newsItem.main_image);
+        }
+    }, [newsItem, setValue]);
+
+    useEffect(() => {
+        getTagList().then(newTags => {
+            setTags(newTags);
+        });
+    }, []);
+
+    useEffect(() => {
+        const newTagSelectOptions = tags.map(tag => ({
+            value: tag.id.toString(),
+            label: tag.label,
+            icon: Newspaper,
+        }));
+        setTagSelectOptions(newTagSelectOptions);
+    }, [tags]);
 
     const onSubmit = async (data: NewsItemFormData) => {
         const newsItemData: NewsItemFormData = {
             ...data,
-            tags: selectedTags?.map(tag => parseInt(tag))
+            tags: selectedTags?.map(tag => parseInt(tag)),
         };
 
-        const newsItem = await createNewsItem(newsItemData);
+        const updatedNewsItem = await updateNewsItem(parseInt(id ?? '-1'), newsItemData);
 
-        if (newsItem) {
-            console.log("News item created successfully!", newsItem);
+        if (updatedNewsItem) {
+            console.log("News item updated successfully!", updatedNewsItem);
+            navigate(`/admin/news_items/${id}`); // Redirect to the view page or wherever appropriate
         } else {
-            console.error("Failed to create news item.");
+            console.error("Failed to update news item.");
         }
     };
 
@@ -67,24 +95,6 @@ const CreateNewsItemForm: React.FC = () => {
             setImagePreview(null);
         }
     };
-
-    useEffect(() => {
-        getTagList().then(newTags => {
-            setTags(newTags);
-        })
-    }, []);
-
-    useEffect(() => {
-        const newTagSelectOptions = tags?.map(tag => {
-            return {
-                value: tag.id.toString(),
-                label: tag.label,
-                icon: Newspaper
-            }
-        });
-
-        setTagSelectOptions(newTagSelectOptions);
-    }, [tags]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -120,18 +130,18 @@ const CreateNewsItemForm: React.FC = () => {
                     id="images"
                     multiple
                     {...register('images')} 
-                    className={`mt-1 block border ${errors.main_image ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm`} 
+                    className={`mt-1 block border ${errors.images ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm`} 
                 />
                 {errors.images && <span className="text-red-500">{errors.images.message}</span>}
             </div>
             <div>
                 <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
-                {tagSelectOptions && (
+                {newsItem && tagSelectOptions && (
                     <MultiSelect
                         id="tags"
                         options={tagSelectOptions}
                         onValueChange={setSelectedTags}
-                        defaultValue={selectedTags}
+                        defaultValue={newsItem.tags?.map(tag => tag.id.toString())}
                         placeholder="Select Tags"
                         variant="inverted"
                         animation={2}
@@ -149,11 +159,11 @@ const CreateNewsItemForm: React.FC = () => {
                 {errors.text && <span className="text-red-500">{errors.text.message}</span>}
             </div>
             <Button type="submit">
-                <Plus />
-                Create
+                <Save />
+                Update
             </Button>
         </form>
     );
 };
 
-export default CreateNewsItemForm;
+export default UpdateNewsItemForm;

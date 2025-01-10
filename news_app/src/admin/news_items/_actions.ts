@@ -4,7 +4,7 @@ import { API_URL } from '@/lib/config';
 
 import {
     NewsItemFormData
-} from '@/admin/news_item/_types';
+} from '@/admin/news_items/_types';
 
 export const createNewsItem = async (data: NewsItemFormData): Promise<NewsItem | undefined> => {
     const url = `${API_URL}newsitems/`;

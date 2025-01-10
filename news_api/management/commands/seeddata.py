@@ -75,7 +75,10 @@ class Command(BaseCommand):
         ]
 
         tag_objects = {
-            tag: NewsItemTag.objects.create(label=tag)
+            tag: NewsItemTag.objects.create(
+                label=tag,
+                image='/tags/default.webp'
+            )
             for tag in tags
         }
 

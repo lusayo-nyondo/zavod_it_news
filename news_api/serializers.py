@@ -52,7 +52,8 @@ class NewsItemSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id',
             'created_on',
-            'updated_on'
+            'updated_on',
+            'views'
         ]
 
 

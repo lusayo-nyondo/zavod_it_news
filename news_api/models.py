@@ -50,12 +50,19 @@ class NewsItem(models.Model):
         upload_to=_get_news_item_image_upload_path
     )
     text: models.TextField = models.TextField()
+    views: models.PositiveIntegerField = models.PositiveIntegerField(
+        default=0
+    )
     created_on: models.DateTimeField = models.DateTimeField(
         auto_now_add=True
     )
     updated_on: models.DateTimeField = models.DateTimeField(
         auto_now=True
     )
+
+    def increment_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
 
     def get_user_reactions(self, type: str | None = None):
         if type:

@@ -18,6 +18,8 @@ import {
   getUserReaction as getUserReactionFromAPI
 } from '@/app/actions';
 
+import LoginRequiredDialog from './login-required-for-reaction-dialog';
+
 const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
   const user = getUser();
  
@@ -92,20 +94,34 @@ const NewsItemTile = ({ newsItem }: { newsItem: NewsItem }) => {
         </div>
         <div className="mt-2">
           <div className="flex flex-row flex-nowrap">
-            <button
-              className={ `${userReaction == 'like' ? 'text-gray-100 bg-gray-700 hover:bg-gray-500' : 'text-gray-700 bg-gray-200 hover:bg-gray-100'} rounded-l-full flex flex-row gap-1 flex-nowrap justify-start items-center border-r border-white px-2`}
-              type="button"
-              onClick={ handleLike }>
-              <span>{ likeCount }</span>
-              <span>{ likeCount == 1 ? 'Like' : 'Likes'}</span>
-            </button>
-            <button
-              className={ `${userReaction == 'dislike' ? 'text-gray-100 bg-gray-700 hover:bg-gray-500' : 'text-gray-700 bg-gray-200 hover:bg-gray-100'} rounded-r-full flex flex-row gap-1 flex-nowrap justify-start items-center border-l border-white px-2` }
-              type="button"
-              onClick={ handleDislike }>
-              <span>{ dislikeCount }</span>
-              <span>{ dislikeCount == 1 ? 'Dislike' : 'Dislikes' }</span>
-            </button>
+            { user ? (
+              <>
+                <button
+                  className={ `${userReaction == 'like' ? 'text-gray-100 bg-gray-700 hover:bg-gray-500' : 'text-gray-700 bg-gray-200 hover:bg-gray-100'} rounded-l-full flex flex-row gap-1 flex-nowrap justify-start items-center border-r border-white px-2`}
+                  type="button"
+                  onClick={ handleLike }>
+                  <span>{ likeCount }</span>
+                  <span>{ likeCount == 1 ? 'Like' : 'Likes'}</span>
+                </button>
+                <button
+                  className={ `${userReaction == 'dislike' ? 'text-gray-100 bg-gray-700 hover:bg-gray-500' : 'text-gray-700 bg-gray-200 hover:bg-gray-100'} rounded-r-full flex flex-row gap-1 flex-nowrap justify-start items-center border-l border-white px-2` }
+                  type="button"
+                  onClick={ handleDislike }>
+                  <span>{ dislikeCount }</span>
+                  <span>{ dislikeCount == 1 ? 'Dislike' : 'Dislikes' }</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <LoginRequiredDialog
+                  userReaction="like"
+                  count={ likeCount }
+                  />
+                <LoginRequiredDialog
+                  userReaction="dislike"
+                  count={ dislikeCount }/>
+              </>
+            )}
           </div>
         </div>
       </div>

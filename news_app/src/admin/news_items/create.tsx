@@ -54,6 +54,7 @@ const CreateNewsItemForm: React.FC = () => {
 
         if (newsItem) {
             console.log("News item created successfully!", newsItem);
+            window.location.assign('/admin/news_items');
         } else {
             console.error("Failed to create news item.");
         }

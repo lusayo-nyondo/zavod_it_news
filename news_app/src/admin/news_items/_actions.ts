@@ -132,8 +132,6 @@ export const deleteNewsItem = async (id: number): Promise<boolean> => {
         if (!response.ok) {
             throw new Error(`Error deleting news item: ${response.statusText}`);
         }
-
-        window.location.assign('/admin');
     } catch (error) {
         console.error("Failed to delete news item:", error);
     }

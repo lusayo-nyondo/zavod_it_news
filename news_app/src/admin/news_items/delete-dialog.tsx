@@ -24,6 +24,7 @@ import {
 function DeleteDialog({ newsItem }: { newsItem: NewsItem}) {
     const deleteNewsItem = () => {
         deleteItemImpl(newsItem.id ?? -1);
+        window.location.assign('/admin/news_items');
     }
 
     return (

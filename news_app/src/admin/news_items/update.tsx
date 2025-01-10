@@ -16,6 +16,8 @@ import { getTagList } from '@/app/actions';
 import { NewsItemTag, NewsItem } from '@/types';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import DeleteDialog from './delete-dialog';
+
 const UpdateNewsItemForm: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [newsItem, setNewsItem] = useState<NewsItem>();
@@ -158,10 +160,15 @@ const UpdateNewsItemForm: React.FC = () => {
                 />
                 {errors.text && <span className="text-red-500">{errors.text.message}</span>}
             </div>
-            <Button type="submit">
-                <Save />
-                Update
-            </Button>
+            <div className="flex flex-row justify-between p-2">
+                <Button type="submit">
+                    <Save />
+                    Update
+                </Button>
+                {newsItem && (
+                    <DeleteDialog newsItem={newsItem}/>
+                )}
+            </div>
         </form>
     );
 };

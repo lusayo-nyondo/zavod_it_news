@@ -8,7 +8,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -29,10 +28,18 @@ import {
 export default function Index() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [count, setCount] = useState<number>(0);
+  const [nextPage, setNextPage] = useState<number>(1);
+  const [startIndex, setStartIndex] = useState<number>(-1);
+  const [endIndex, setEndIndex] = useState<number>(-1);
 
   useEffect(() => {
     getNewsItems(page).then(data => {
-      setNewsItems(data);
+      setNewsItems(data[0]);
+      setCount(data[1]);
+      setNextPage(data[2]);
+      setStartIndex(data[3]);
+      setEndIndex(data[4]);
     })
   }, [page]);
 
@@ -42,8 +49,13 @@ export default function Index() {
 
   return (
     <>
+      <div className="w-full flex flex-row justify-end p-2">
+        <Button asChild>
+          <a href="/admin/news_items/create">Create New</a>
+        </Button>
+      </div>
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>Here are your news stories</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">ID</TableHead>
@@ -53,23 +65,17 @@ export default function Index() {
           </TableHeader>
         <TableBody>
           {newsItems.map(newsItem => (
-          <TableRow key={newsItem.id}>
+          <TableRow key={newsItem.id} className="hover:cursor-pointer" onClick={ () => window.location.assign(`/admin/news_items/${newsItem.id}`) }>
             <TableCell className="font-medium">{newsItem.id}</TableCell>
             <TableCell>{newsItem.title}</TableCell>
             <TableCell className="text-right">{newsItem.created_on}</TableCell>
           </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          1-18 of 1000.
+          {startIndex}-{endIndex} of { count }.
         </div>
         <div className="space-x-2">
           <Button
@@ -84,6 +90,7 @@ export default function Index() {
             variant="outline"
             size="sm"
             onClick={() => navigateToPage(page + 1)}
+            disabled={ nextPage <= page }
           >
             Next
           </Button>

@@ -145,7 +145,6 @@ export const setUserReaction = async (newsItemId: number, userId: number, reacti
     user: userId,
     reaction: reaction
   };
-  console.log("Data is: ", data);
   const token = getAuthToken();
 
   try {

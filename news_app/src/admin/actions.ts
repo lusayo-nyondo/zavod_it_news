@@ -11,9 +11,38 @@ import {
 } from '@/lib/config';
 
 
-export const getNewsItems = async (pageNumber: number = 1): Promise<NewsItem[]> => {
+const calculatePaginationIndices = (
+  currentPage: number,
+  pageSize: number,
+  totalItems: number,
+  currentResultSetLength: number
+): { startIndex: number; endIndex: number; } => {
+  if (currentPage < 1) {
+      throw new Error("Current page must be at least 1.");
+  }
+
+  const startIndex = (currentPage - 1) * pageSize + 1;
+  let endIndex = startIndex + pageSize - 1;
+
+  if (endIndex > totalItems) {
+      endIndex = totalItems;
+  }
+  if (endIndex > startIndex + currentResultSetLength) {
+      endIndex = startIndex + currentResultSetLength;
+  }
+
+  return {
+      startIndex,
+      endIndex,
+  };
+}
+
+export const getNewsItems = async (pageNumber: number = 1): Promise<[NewsItem[], number, number, number, number]> => {
   let newsItems: NewsItem[] = [];
-  const url = `${API_URL}newsitems_admin/?page=${pageNumber}`;
+  const url = `${API_URL}newsitems/?page_size=18&page=${pageNumber}`;
+
+  let count: number = 0;
+  let nextPage: number = 0;
 
   try {
       const response = await fetch(url, { method: 'GET' });
@@ -23,6 +52,9 @@ export const getNewsItems = async (pageNumber: number = 1): Promise<NewsItem[]> 
       }
 
       const jsonData = await response.json();
+      console.log(jsonData);
+      
+      count = jsonData.count;
       const data = jsonData.results;
       
       newsItems = data.map((item: NewsItem) => ({
@@ -33,16 +65,27 @@ export const getNewsItems = async (pageNumber: number = 1): Promise<NewsItem[]> 
           tags: item.tags,
           main_image: item.main_image
       }));
+      const nextPageURL = new URL(jsonData.next);
+      const urlParams = new URLSearchParams(nextPageURL.search);
+
+      nextPage = parseInt(urlParams.get('page') ?? '1');
   } catch (error) {
       console.error("Failed to fetch news items:", error);
   }
 
-  return newsItems;
+  const { startIndex, endIndex } = calculatePaginationIndices(
+    pageNumber,
+    18,
+    count,
+    newsItems.length
+  );
+
+  return [newsItems, count, nextPage, startIndex, endIndex];
 };
 
 export const getNewsItem = async (id: number): Promise<NewsItem | undefined> => {
   let newsItem: NewsItem;
-  const url = `${API_URL}newsitems_admin/${id}/`;
+  const url = `${API_URL}newsitems/${id}/`;
   
   try {
     const response = await fetch(

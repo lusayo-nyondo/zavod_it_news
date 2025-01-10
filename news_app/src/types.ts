@@ -1,12 +1,12 @@
 export type NewsItem = {
-    id: number;
+    id?: number | undefined;
     title: string;
     main_image: string;
     text: string;
-    images: NewsItemImage[];
-    created_on: string;
-    updated_on: string;
-    tags: NewsItemTag[];
+    images?: NewsItemImage[];
+    created_on?: string;
+    updated_on?: string;
+    tags?: NewsItemTag[];
 };
 
 export type NewsItemImage = {

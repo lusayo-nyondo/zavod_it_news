@@ -96,6 +96,17 @@ class NewsItem(models.Model):
             user_reaction_event.event_type = reaction
             user_reaction_event.save()
 
+    def set_tags(self, tag_ids: list[int]):
+        tags = NewsItemTag.objects.filter(id__in=tag_ids)
+        self.tags.set(tags)  # type: ignore
+
+    def set_images(self, image_files):
+        for image in image_files:
+            NewsItemImage.objects.create(
+                news_item=self,
+                image=image
+            )
+
     def __str__(self):
         return self.title
 

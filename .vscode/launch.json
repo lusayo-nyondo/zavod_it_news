@@ -9,6 +9,7 @@
             ],
             "django": true,
             "autoStartBrowser": false,
+            "justMyCode": false,
             "program": "${workspaceFolder}\\manage.py",
             "python": "${workspaceFolder}\\venv\\Scripts\\python.exe"
         },

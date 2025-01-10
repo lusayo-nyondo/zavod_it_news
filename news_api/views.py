@@ -1,6 +1,12 @@
+from django.db import (
+    transaction
+)
+
 from django.contrib.auth.models import (
     User
 )
+
+from rest_framework import status  # type: ignore
 
 from rest_framework.viewsets import (  # type: ignore
     ModelViewSet
@@ -53,21 +59,73 @@ class NewsItemPaginator(PageNumberPagination):
     page_size = 3
 
 
-class NewsItemAdminPaginator(PageNumberPagination):
-    page_size = 18
-
-
-class NewsItemAdminViewSet(ModelViewSet):
-    queryset = NewsItem.objects.all()
-    serializer_class = NewsItemSerializer
-    pagination_class = NewsItemAdminPaginator
-
-
 class NewsItemViewSet(ModelViewSet):
     queryset = NewsItem.objects.all()
     serializer_class = NewsItemSerializer
     pagination_class = NewsItemPaginator
     filterset_class = NewsItemFilter
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            news_item = serializer.save()
+
+            tags = request.data.getlist('tags', [])
+            images = request.FILES.getlist('images', [])
+
+            news_item.set_tags(tags)
+            news_item.set_images(images)
+
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance,
+            data=request.data,
+            partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+
+        with transaction.atomic():
+            news_item = serializer.save()
+
+            tags = request.data.getlist('tags', [])
+            images = request.FILES.getlist('images', [])
+
+            news_item.set_tags(tags)
+            news_item.set_images(images)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+            headers=headers
+        )
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        page_size = self.request.query_params.get('page_size', None)
+
+        if page_size is not None:
+            try:
+                page_size = int(page_size)
+                if page_size > 0:
+                    self.paginator.page_size = page_size
+            except ValueError:
+                pass
+
+        return queryset
 
     @action(detail=True, methods=['get'])
     def get_user_reaction(self, request, pk=None):

@@ -9,6 +9,10 @@ from .models import (
 
 
 class NewsItemTagSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(
+        required=False
+    )
+
     class Meta:
         model = NewsItemTag
         fields = [
@@ -16,6 +20,7 @@ class NewsItemTagSerializer(serializers.ModelSerializer):
             'label',
             'image',
         ]
+        read_only_fields = ['id']
 
 
 class NewsItemImageSerializer(serializers.ModelSerializer):
@@ -25,12 +30,16 @@ class NewsItemImageSerializer(serializers.ModelSerializer):
             'id',
             'image',
         ]
+        read_only_fields = ['id']
 
 
 class NewsItemSerializer(serializers.ModelSerializer):
     tags: NewsItemTagSerializer = NewsItemTagSerializer(
         many=True,
         read_only=True
+    )
+    main_image: serializers.ImageField = serializers.ImageField(
+        required=False
     )
     images: NewsItemImageSerializer = NewsItemImageSerializer(
         many=True,

@@ -1,10 +1,5 @@
 import * as React from "react"
 import {
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
   Newspaper,
 } from "lucide-react"
 
@@ -32,48 +27,7 @@ const data = {
       icon: Newspaper,
       isActive: true,
       items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
       ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 }
@@ -88,7 +42,7 @@ export default function Sidebar({ ...props }: React.ComponentProps<typeof Sideba
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/admin">
-                <img src="logo.png" alt="Logo Image" className="h-40 object-contain object-center" />
+                <img src="/logo.png" alt="Logo Image" className="h-40 object-contain object-center" />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -101,5 +55,5 @@ export default function Sidebar({ ...props }: React.ComponentProps<typeof Sideba
         <NavUser user={user} />
       </SidebarFooter>
     </SidebarBase>
-  )
+  );
 }

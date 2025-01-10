@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav className="bg-white w-full border-b">
       <div className="flex items-center justify-between px-4 max-w-screen-xl mx-auto py-3 md:flex md:px-8">
         <a href="/">
-          <img src="/logo.png" alt="Logo Image" className="h-12 object-contain object-center" />    
+          <img src="/static/logo.png" alt="Logo Image" className="h-12 object-contain object-center" />    
         </a>
         <ul className="flex items-center flex-row space-x-6 space-y-0">
           {menus.map((item, idx) => (

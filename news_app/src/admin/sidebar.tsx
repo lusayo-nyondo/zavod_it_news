@@ -49,7 +49,7 @@ export default function Sidebar({ ...props }: React.ComponentProps<typeof Sideba
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="/admin">
-                <img src="/logo.png" alt="Logo Image" className="h-40 object-contain object-center" />
+                <img src="/static/logo.png" alt="Logo Image" className="h-40 object-contain object-center" />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

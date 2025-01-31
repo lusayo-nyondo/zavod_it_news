@@ -1,3 +1,8 @@
+from typing import (
+    Any,
+    Dict
+)
+
 from django.contrib.auth.models import (
     User,
 )
@@ -35,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
         ]
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, Any]):
         user = User(
             username=validated_data['username'],
             email=validated_data['email']
@@ -46,7 +51,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-    def update(self, instance, validated_data):
+    def update(self, instance: User, validated_data: Dict[str, Any]):
         instance.username = validated_data.get(
             'username',
             instance.username
